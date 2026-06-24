@@ -1032,6 +1032,22 @@ display:
   skin: default
 
 # =============================================================================
+# TUI (Terminal UI) Settings
+# =============================================================================
+# Settings specific to the TUI gateway and WebSocket connections.
+tui:
+  ws:
+    # WebSocket write timeout in seconds.
+    # Maximum time the gateway will wait for a WebSocket write to complete
+    # before considering the transport stalled. When the event loop is blocked
+    # by long-running API calls (e.g., slow providers, large contexts), writes
+    # may take longer than the default. Increase this value to avoid premature
+    # connection drops during slow API calls.
+    # Default: 10.0
+    # Recommended: 30.0 for slow providers (GLM, Claude with large contexts)
+    write_timeout_s: 10.0
+
+# =============================================================================
 # Model Aliases — short names for /model command
 # =============================================================================
 # Map short aliases to exact (model, provider, base_url) tuples.

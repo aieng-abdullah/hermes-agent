@@ -886,6 +886,26 @@ def _load_show_reasoning() -> bool:
     return bool((_load_cfg().get("display") or {}).get("show_reasoning", False))
 
 
+def _load_ws_write_timeout() -> float:
+    """Load WebSocket write timeout from config.yaml with env var fallback.
+    
+    Reads tui.ws.write_timeout_s from config.yaml. Falls back to
+    HERMES_TUI_WS_WRITE_TIMEOUT_S env var for backward compatibility.
+    Default is 10.0 seconds.
+    """
+    env = os.environ.get("HERMES_TUI_WS_WRITE_TIMEOUT_S", "").strip()
+    if env:
+        try:
+            return max(1.0, float(env))
+        except (ValueError, TypeError):
+            pass
+    raw = ((_load_cfg().get("tui") or {}).get("ws") or {}).get("write_timeout_s")
+    try:
+        return max(1.0, float(raw or 10.0))
+    except (ValueError, TypeError):
+        return 10.0
+
+
 def _load_tool_progress_mode() -> str:
     env = os.environ.get("HERMES_TUI_TOOL_PROGRESS", "").strip().lower()
     if env in {"off", "new", "all", "verbose"}:
